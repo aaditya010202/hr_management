@@ -140,7 +140,6 @@ private EmployeeRequestDTO convertEntityToDtoRequest(Employee employee)
             employeeRepository.deleteById(empId);
         }
     }
-
     public Employee updateEmployeeById(String empId, Employee employeeData)
     {
             Optional<Employee> optionalEmployee = employeeRepository.findById(empId);
