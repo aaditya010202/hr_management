@@ -1,15 +1,15 @@
 package com.HR_Management.hr.controller;
 
-import com.HR_Management.hr.DTO.Request.EmployeeRequestDTO;
 import com.HR_Management.hr.DTO.Response.EmployeeResponseDTO;
+import com.HR_Management.hr.DTO.Request.EmployeeRequestDTO;
 import com.HR_Management.hr.entities.Employee;
 import com.HR_Management.hr.services.EmployeeServices;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequestMapping("/employees")
 @RestController
@@ -19,43 +19,69 @@ public class EmployeeController {
     @Autowired
     EmployeeServices employeeServices;
 
-//    @GetMapping("")
-//    public List<Employee> getEmployees(){
-//        return employeeServices.getEmployees();
-//    }
     @GetMapping("")
-    public List<EmployeeRequestDTO> getEmployees(){
+    @Operation(summary = "Get all employees", description = "Get a list of all the employees")
+
+    public List<EmployeeResponseDTO> getEmployees(){
         return employeeServices.getEmployees();
     }
+
     @GetMapping("/{id}")
+    @Operation(summary = "Get an employee by id", description = "Enter the employee id to get the employee")
     public Employee getEmployeeById(@PathVariable String id){
         return employeeServices.getEmployeeById(id);
     }
+
     @GetMapping("/designation/{designation}")
+    @Operation(summary = "Get employees by designation", description = "Get all the employees based on the designation")
     public List<Employee> getEmployeesByDesignation(@PathVariable String designation)
     {
         return employeeServices.getEmployeesByDesignationDesc(designation);
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update the employee by id", description = "Update the details of employee by id(edit details or add projects)")
     public Employee updateEmployeeById(@PathVariable String id, @RequestBody Employee employeeData )
     {
         return employeeServices.updateEmployeeById(id, employeeData);
     }
+
     @PutMapping("")
-    public List<Employee> saveEmployees(@RequestBody List<EmployeeResponseDTO> employeeList){
-        return employeeServices.saveEmployeeData(employeeList);
+    @Operation(summary = "Create new employees", description = "Enter the name, email(unique), department, salary(float), designation, total leaves assigned(default: 22), address and joining date.")
+    public List<Employee> saveEmployees(@RequestBody List<EmployeeRequestDTO> employeeList, @RequestParam(name = "Designation") DesignationValues designationValues, HttpServletRequest httpServletRequest){
+        return employeeServices.saveEmployeeData(employeeList, designationValues);
     }
 
     @DeleteMapping("/designation/{designation}")
+    @Operation(summary = "Delete all employees by designation", description = "Delete all the employees based on the designation of employee.")
     public void deleteEmployeeByDesignation(@PathVariable String designation)
     {
         employeeServices.deleteEmployeeDesignation(designation);
     }
+
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete employee by id", description = "Enter the employee id of the employee to be deleted.")
     public void deleteEmployeeById(@PathVariable String id)
     {
         employeeServices.deleteEmployeesById(id);
     }
 
+    public enum DesignationValues
+    {
+        HR,
+        JuniorDeveloper,
+        SeniorDeveloper,
+        Manager,
+        VP,
+        CEO,
+        CTO,
+        Director,
+        SeniorDirector
+    }
+    public enum DepartmentValues{
+        Engineering,
+        Sales,
+        Marketing,
+        Finance
+    }
 }

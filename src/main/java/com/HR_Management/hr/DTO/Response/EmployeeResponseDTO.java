@@ -1,28 +1,51 @@
 package com.HR_Management.hr.DTO.Response;
-import java.util.Date;
+
+
+import com.HR_Management.hr.entities.Leave;
+import com.HR_Management.hr.entities.Project;
+
+import java.util.List;
 
 public class EmployeeResponseDTO {
+    String empId;
     String name;
     String email;
     String department;
     Float salary;
     String designation;
     Long leaves;
-    String address;
-    Date joiningDate;
+    List<Project> projectList;
+
+
 
     public EmployeeResponseDTO() {
     }
 
-    public EmployeeResponseDTO(String name, String email, String department, Float salary, String designation, Long leaves, String address, Date joiningDate) {
+    public EmployeeResponseDTO(List<Project> projectList,String empId, String name, String email, String department, Float salary, String designation, Long leaves) {
+        this.empId = empId;
         this.name = name;
         this.email = email;
         this.department = department;
         this.salary = salary;
         this.designation = designation;
         this.leaves = leaves;
-        this.address = address;
-        this.joiningDate = joiningDate;
+        this.projectList = projectList;
+    }
+
+    public List<Project> getProjectList() {
+        return projectList;
+    }
+
+    public void setProjectList(List<Project> projectList) {
+        this.projectList = projectList;
+    }
+
+    public String getEmpId() {
+        return empId;
+    }
+
+    public void setEmpId(String empId) {
+        this.empId = empId;
     }
 
     public String getName() {
@@ -71,21 +94,5 @@ public class EmployeeResponseDTO {
 
     public void setLeaves(Long leaves) {
         this.leaves = leaves;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Date getJoiningDate() {
-        return joiningDate;
-    }
-
-    public void setJoiningDate(Date joiningDate) {
-        this.joiningDate = joiningDate;
     }
 }

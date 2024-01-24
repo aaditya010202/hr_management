@@ -1,34 +1,28 @@
 package com.HR_Management.hr.DTO.Request;
-
+import java.util.Date;
 
 public class EmployeeRequestDTO {
-    String empId;
     String name;
     String email;
     String department;
     Float salary;
-    String designation;
+//    String designation;
     Long leaves;
+    String address;
+    Date joiningDate;
 
     public EmployeeRequestDTO() {
     }
 
-    public EmployeeRequestDTO(String empId, String name, String email, String department, Float salary, String designation, Long leaves) {
-        this.empId = empId;
+    public EmployeeRequestDTO(String name, String email, String department, Float salary, Long leaves, String address, Date joiningDate) {
         this.name = name;
         this.email = email;
         this.department = department;
         this.salary = salary;
-        this.designation = designation;
+//        this.designation = designation;
         this.leaves = leaves;
-    }
-
-    public String getEmpId() {
-        return empId;
-    }
-
-    public void setEmpId(String empId) {
-        this.empId = empId;
+        this.address = address;
+        this.joiningDate = joiningDate;
     }
 
     public String getName() {
@@ -63,13 +57,13 @@ public class EmployeeRequestDTO {
         this.salary = salary;
     }
 
-    public String getDesignation() {
-        return designation;
-    }
-
-    public void setDesignation(String designation) {
-        this.designation = designation;
-    }
+//    public String getDesignation() {
+//        return designation;
+//    }
+//
+//    public void setDesignation(String designation) {
+//        this.designation = designation;
+//    }
 
     public Long getLeaves() {
         return leaves;
@@ -77,5 +71,21 @@ public class EmployeeRequestDTO {
 
     public void setLeaves(Long leaves) {
         this.leaves = leaves;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Date getJoiningDate() {
+        return joiningDate;
+    }
+
+    public void setJoiningDate(Date joiningDate) {
+        this.joiningDate = joiningDate;
     }
 }
