@@ -63,7 +63,6 @@ public class EmployeeServices {
             if(Pattern.matches(emailRegexPattern,employee.getEmail()))
             {
                 employee1.setEmail(employee.getEmail());
-
             }
 
             employee1.setLeaves(employee.getLeaves());
