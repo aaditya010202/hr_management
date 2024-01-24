@@ -1,6 +1,9 @@
 package com.HR_Management.hr.services;
 
+import com.HR_Management.hr.DTO.Request.ProjectRequestDTO;
+import com.HR_Management.hr.DTO.Request.ProjectRequestUpdateDTO;
 import com.HR_Management.hr.common.CommonUtils;
+import com.HR_Management.hr.controller.ProjectController;
 import com.HR_Management.hr.entities.Employee;
 import com.HR_Management.hr.entities.Project;
 import com.HR_Management.hr.respository.EmployeeRepository;
@@ -9,8 +12,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectServices {
@@ -20,49 +26,87 @@ public class ProjectServices {
 
     @Autowired
     EmployeeRepository employeeRepository;
-    public List<Project> saveProjectsData(List<Project> projectList) {
-
-        projectList.forEach(project -> {project.setP_id(CommonUtils.getUUID());});
-        return projectRepository.saveAll(projectList);
+    public List<Project> saveProjectsData(List<ProjectRequestDTO> projectList) {
+         return projectList.stream().map(project->{
+            Project project1=new Project();
+            project1.setId(CommonUtils.getUUID());
+            project1.setDescription(project.getDescription());
+            project1.setName(project.getName());
+            return projectRepository.save(project1);
+        }).collect(Collectors.toList());
     }
 
     public List<Project> getProjects(){
         return projectRepository.findAll();
     }
 
-    public Project getProjectById(String p_id) {
-        Project project= projectRepository.findById(p_id).orElseThrow(RuntimeException::new);
+    public Project getProjectById(String id)
+    {
+        Project project= projectRepository.findById(id).orElseThrow(RuntimeException::new);
 //        project.setEmployees(getListOfEmployeeFromProjectId(p_id));
         return project;
     }
-    public Project updateProjectsById(String p_id, Project projectDetails) {
-        Optional<Project> project = projectRepository.findById(p_id);
-
-        List<Employee> emp=employeeRepository.findAllById(projectDetails.getEmployees().stream().map(Employee::getEmpId).toList());
-        if (project.isPresent()) {
+    public Project updateProjectsById(String id, ProjectRequestUpdateDTO projectDetails)
+    {
+        Optional<Project> project = projectRepository.findById(id);
+        if(project.isPresent()){
             Project existingProject = project.get();
             existingProject.setName(projectDetails.getName()!=null?projectDetails.getName():existingProject.getName());
             existingProject.setDescription(projectDetails.getDescription()!=null?projectDetails.getDescription():existingProject.getDescription());
-//            existingProject.setEmployees(projectDetails.getEmployees()!=null?projectDetails.getEmployees():existingProject.getEmployees());
-            existingProject.setEmployees(emp);
-            for(Employee e: emp){
-                e.getProjects().add(existingProject);
-                employeeRepository.save(e);
+            if (projectDetails.getEmployees()!=null)
+            {
+//                List<Employee> emp=employeeRepository.findAllById(projectDetails.getEmployees().stream().map(Employee::getEmpId).toList());
+                List<Employee> emp=employeeRepository.findAllById(projectDetails.getEmployees());
+                existingProject.setEmployees(emp);
+                for(Employee e: new ArrayList<>(emp)){
+                    e.getProjects().add(existingProject);
+                    employeeRepository.save(e);
+                }
             }
-//            employeeRepository.saveAll(emp);
             return projectRepository.save(existingProject);
         }
-        return null;
+        else return null;
     }
     @Transactional
-    public void deleteProjectById(String p_id) {
-        projectRepository.deleteById(p_id);
+    public void deleteProjectById(String id)
+    {
+        Project project=projectRepository.findById(id).get();
+        List<Employee> employeeList=project.getEmployees();
+        employeeList.stream().peek(employee -> {
+            employee.getProjects().remove(project);
+            employeeRepository.save(employee);
+//            project.getEmployees().remove(employee);
+//            projectRepository.save(project);
+        }).collect(Collectors.toList());
+        project.getEmployees().clear();
+        projectRepository.save(project);
+        projectRepository.deleteById(id);
     }
     @Transactional
-    public void deleteProjectByName(String name) {
+    public void deleteProjectByName(String name)
+    {
         projectRepository.deleteByName(name);
     }
-    public List<Employee> getListOfEmployeeFromProjectId(String pId){
+    public List<Employee> getListOfEmployeeFromProjectId(String pId)
+    {
         return employeeRepository.findAllById(projectRepository.findEmployeeByProjectId(pId));
+    }
+
+    public Project assignDeassign(String id, String empId, ProjectController.AssignDeassign assignDeassign) {
+        Project project=projectRepository.findById(id).get();
+        Employee employee=employeeRepository.findById(empId).get();
+        if(Objects.equals(assignDeassign.toString(),"Assign")){
+            project.getEmployees().add(employee);
+            projectRepository.save(project);
+            employee.getProjects().add(project);
+            employeeRepository.save(employee);
+        }
+        else{
+            project.getEmployees().remove(employee);
+            projectRepository.save(project);
+            employee.getProjects().remove(project);
+            employeeRepository.save(employee);
+        }
+        return project;
     }
 }

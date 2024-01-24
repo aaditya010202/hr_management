@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.ReadOnlyProperty;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -38,14 +39,14 @@ public class Leave {
     private Employee employee;
 
     @Column(name = "fromDate")
-    @Temporal(TemporalType.DATE)
-    @JsonFormat(pattern = "yyyy-mm-dd")
-    private Date fromDate;
+//    @Temporal(TemporalType.DATE)
+//    @JsonFormat(pattern = "yyyy-mm-dd")
+    private LocalDate fromDate;
 
     @Column(name = "toDate")
     @Temporal(TemporalType.DATE)
-    @JsonFormat(pattern = "yyyy-mm-dd")
-    private Date toDate;
+//    @JsonFormat(pattern = "yyyy-mm-dd")
+    private LocalDate toDate;
 
     @Column(name = "holidayDays", columnDefinition =  "bigint GENERATED ALWAYS AS ((to_date - from_date)) STORED" ,insertable = false, updatable = false)
 //    @Column(name = "holidayDays")
@@ -62,7 +63,7 @@ public class Leave {
     public Leave() {
     }
 
-    public Leave(String id, String empId, String description, Boolean accepted, String type, Employee employee, Date fromDate, Date toDate, Long holidayDays,Employee updatedBy) {
+    public Leave(String id, String empId, String description, Boolean accepted, String type, Employee employee, LocalDate fromDate, LocalDate toDate, Long holidayDays,Employee updatedBy) {
         this.Id = id;
         this.empId = empId;
         this.description = description;
@@ -83,19 +84,19 @@ public class Leave {
         this.holidayDays = holidayDays;
     }
 
-    public Date getFromDate() {
+    public LocalDate getFromDate() {
         return fromDate;
     }
 
-    public void setFromDate(Date fromDate) {
+    public void setFromDate(LocalDate fromDate) {
         this.fromDate = fromDate;
     }
 
-    public Date getToDate() {
+    public LocalDate getToDate() {
         return toDate;
     }
 
-    public void setToDate(Date toDate) {
+    public void setToDate(LocalDate toDate) {
         this.toDate = toDate;
     }
 
