@@ -15,15 +15,9 @@ public interface EmployeeRepository extends JpaRepository<Employee,String> {
     List<Employee> findAllByDesignationOrderBySalaryDesc(String designation);
     Employee findByEmpId(String empId);
 
-    //Optional<Employee> findById(String empId);
-
     void deleteById(String empId);
 
     @Query(value = "select * from employee where emp_id in :list", nativeQuery = true)
     List<Employee> findAllById(List<String> list);
 
-    //    @Modifying
-//    @Transactional
-//    @Query(value = "UPDATE employee emp SET emp.employee_leaves=:leaveList WHERE emp.emp_id=:id", nativeQuery = true)
-//    void appendLeavesToEmployeeLeaves(Integer id,List<Leave> leaveList);
 }

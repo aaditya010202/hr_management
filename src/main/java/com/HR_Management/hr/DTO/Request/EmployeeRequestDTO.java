@@ -1,4 +1,5 @@
 package com.HR_Management.hr.DTO.Request;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class EmployeeRequestDTO {
@@ -7,14 +8,14 @@ public class EmployeeRequestDTO {
     String department;
     Float salary;
 //    String designation;
-    Long leaves;
+    Long leaves=22L;
     String address;
-    Date joiningDate;
+    LocalDate joiningDate;
 
     public EmployeeRequestDTO() {
     }
 
-    public EmployeeRequestDTO(String name, String email, String department, Float salary, Long leaves, String address, Date joiningDate) {
+    public EmployeeRequestDTO(String name, String email, String department, Float salary, Long leaves, String address, LocalDate joiningDate) {
         this.name = name;
         this.email = email;
         this.department = department;
@@ -57,14 +58,6 @@ public class EmployeeRequestDTO {
         this.salary = salary;
     }
 
-//    public String getDesignation() {
-//        return designation;
-//    }
-//
-//    public void setDesignation(String designation) {
-//        this.designation = designation;
-//    }
-
     public Long getLeaves() {
         return leaves;
     }
@@ -81,11 +74,11 @@ public class EmployeeRequestDTO {
         this.address = address;
     }
 
-    public Date getJoiningDate() {
+    public LocalDate getJoiningDate() {
         return joiningDate;
     }
 
-    public void setJoiningDate(Date joiningDate) {
+    public void setJoiningDate(LocalDate joiningDate) {
         this.joiningDate = joiningDate;
     }
 }

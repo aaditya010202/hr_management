@@ -13,7 +13,6 @@ import com.HR_Management.hr.respository.ProjectRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -30,29 +29,8 @@ public class EmployeeServices {
     @Autowired
     private ProjectServices projectServices;
 
-//    public List<Employee> saveEmployeeData(List<Employee> employeeList) {
-//
-//        employeeList.forEach(employee -> {employee.setEmpId(CommonUtils.getUUID());});
-////        new Employee().setEmpId(CommonUtils.getUUID());
-//        return employeeRepository.saveAll(
-//                employeeList
-//                .stream()
-//                .peek(employee -> {
-//                    if (Objects.nonNull(employee.getProjects())) {
-//                        var projects = new ArrayList<>(projectRepository.findAllById(employee.getProjects().stream().map(Project::getP_id).toList()));
-//                        projects.stream().peek(project -> {
-//                            List<Employee> empList=project.getEmployees();
-//                            empList.add(employee);
-//                            project.setEmployees(empList);
-//                        });
-//                    }
-//
-//                }).toList()
-//        );
-//    }
-
     @Transactional
-    public List<Employee> saveEmployeeData(List<EmployeeRequestDTO> employeeList, EmployeeController.DesignationValues designationValues) {
+    public List<Employee> saveEmployeeData(List<EmployeeRequestDTO> employeeList, EmployeeController.Band band, EmployeeController.DesignationValues designationValues) {
         String emailRegexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
                 + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
         return employeeList.stream().map(employee -> {
@@ -63,39 +41,32 @@ public class EmployeeServices {
             if(Pattern.matches(emailRegexPattern,employee.getEmail()))
             {
                 employee1.setEmail(employee.getEmail());
+            }else {
+                throw new RuntimeException("email is invalid.");
             }
 
+            if(Objects.equals(band.toString(), "L1")){
+                employee1.setSalary(50000f);
+            } else if (Objects.equals(band.toString(), "L2")) {
+                employee1.setSalary(100000f);
+            }
+            else if(Objects.equals(band.toString(), "L3"))
+            {
+                employee1.setSalary(200000f);
+            }
+            else {
+                employee1.setSalary(employee.getSalary());
+            }
             employee1.setLeaves(employee.getLeaves());
-            employee1.setSalary(employee.getSalary());
             employee1.setJoiningDate(employee.getJoiningDate());
             employee1.setDepartment(employee.getDepartment());
             employee1.setDesignation(designationValues.toString());
             employee1.setAddress(employee.getAddress());
+            employee1.setBand(band.toString());
             return employeeRepository.save(employee1);
         }).collect(Collectors.toList());
     }
-//        new Employee().setEmpId(CommonUtils.getUUID());
-//         employeeRepository.saveAll(
-//                employeeList
-//                        .stream()
-//                        .peek(employee -> {
-//                            if (Objects.nonNull(employee.getProjects())) {
-//                                var projects = new ArrayList<>(projectRepository.findAllById(employee.getProjects().stream().map(Project::getP_id).toList()));
-//                                projects.stream().peek(project -> {
-//                                    List<Employee> empList=project.getEmployees();
-//                                    empList.add(employee);
-//                                    project.setEmployees(empList);
-//                                });
-//                            }
-//
-//                        }).toList()
-//        );
-//        });
-//    }
 
-//    public List<Employee> getEmployees() {
-//        return employeeRepository.findAll();
-//    }
     public List<EmployeeResponseDTO> getEmployees() {
         return employeeRepository.findAll().stream().map(this::convertEntityToDtoRequest).collect(Collectors.toList());
     }

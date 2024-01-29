@@ -3,6 +3,7 @@ package com.HR_Management.hr.entities;
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,17 +37,31 @@ public class Employee {
     @Column(name = "address")
     private String address;
 
+    private String band;
+
     @Column(name = "joining_date")
-    @Temporal(TemporalType.DATE)
-    @JsonFormat(pattern = "yyyy-mm-dd")
-    private Date joiningDate;
+//    @Temporal(TemporalType.DATE)
+//    @JsonFormat(pattern = "yyyy-mm-dd")
+    private LocalDate joiningDate;
 
     @JsonIncludeProperties({"p_id", "name", "description"})
     @ManyToMany( cascade = CascadeType.ALL)
     @JoinTable(joinColumns = @JoinColumn(name = "emp_id"), inverseJoinColumns = @JoinColumn(name = "p_id"))
     private List<Project> projects= new ArrayList<>();
 
-    public Employee(String empId, String name, String email, String department, Float salary, String designation, Long leaves, String address, Date joiningDate, List<Project> projects, List<Leave> employeeLeaves, Long pending_leaves) {
+    public Employee(String empId,
+                    String name,
+                    String email,
+                    String department,
+                    Float salary,
+                    String designation,
+                    Long leaves,
+                    String address,
+                    LocalDate joiningDate,
+                    List<Project> projects,
+                    List<Leave> employeeLeaves,
+                    Long pending_leaves,
+                    String band) {
         this.empId = empId;
         this.name = name;
         this.email = email;
@@ -57,25 +72,25 @@ public class Employee {
         this.address = address;
         this.joiningDate = joiningDate;
         this.projects = projects;
-//        this.pending_leaves=pending_leaves;
+        this.band=band;
     }
 
-//    public Long getPending_leaves() {
-//        return pending_leaves;
-//    }
+    public String getBand() {
+        return band;
+    }
 
-//    public void setPending_leaves(Long pending_leaves) {
-//        this.pending_leaves = pending_leaves;
-//    }
+    public void setBand(String band) {
+        this.band = band;
+    }
 
-    public void setJoiningDate(Date joiningDate) {
+    public void setJoiningDate(LocalDate joiningDate) {
         this.joiningDate = joiningDate;
     }
 
-    public Employee(Date joiningDate) {
+    public Employee(LocalDate joiningDate) {
         this.joiningDate = joiningDate;
     }
-    public Date getJoiningDate() {
+    public LocalDate getJoiningDate() {
         return joiningDate;
     }
     public String getEmpId() {

@@ -32,6 +32,8 @@ public class ProjectServices {
             project1.setId(CommonUtils.getUUID());
             project1.setDescription(project.getDescription());
             project1.setName(project.getName());
+            project1.setTotalDuration(project.getTotalDuration());
+            project1.setTotalCost(project.getTotalCost());
             return projectRepository.save(project1);
         }).collect(Collectors.toList());
     }
@@ -53,6 +55,9 @@ public class ProjectServices {
             Project existingProject = project.get();
             existingProject.setName(projectDetails.getName()!=null?projectDetails.getName():existingProject.getName());
             existingProject.setDescription(projectDetails.getDescription()!=null?projectDetails.getDescription():existingProject.getDescription());
+            existingProject.setTotalCost(projectDetails.getTotalCost()!=null? projectDetails.getTotalCost():existingProject.getTotalCost());
+            existingProject.setTotalDuration(projectDetails.getTotalDuration()!=null?projectDetails.getTotalDuration():existingProject.getTotalDuration());
+
             if (projectDetails.getEmployees()!=null)
             {
 //                List<Employee> emp=employeeRepository.findAllById(projectDetails.getEmployees().stream().map(Employee::getEmpId).toList());

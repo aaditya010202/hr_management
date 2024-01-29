@@ -41,15 +41,20 @@ public class EmployeeController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update the employee by id", description = "Update the details of employee by id(edit details or add projects)")
-    public Employee updateEmployeeById(@PathVariable String id, @RequestBody Employee employeeData )
+    public Employee updateEmployeeById(
+            @PathVariable String id,
+            @RequestBody Employee employeeData )
     {
         return employeeServices.updateEmployeeById(id, employeeData);
     }
 
     @PutMapping("")
     @Operation(summary = "Create new employees", description = "Enter the name, email(unique), department, salary(float), designation, total leaves assigned(default: 22), address and joining date.")
-    public List<Employee> saveEmployees(@RequestBody List<EmployeeRequestDTO> employeeList, @RequestParam(name = "Designation") DesignationValues designationValues, HttpServletRequest httpServletRequest){
-        return employeeServices.saveEmployeeData(employeeList, designationValues);
+    public List<Employee> saveEmployees(
+            @RequestBody List<EmployeeRequestDTO> employeeList,
+            @RequestParam(name = "Designation") DesignationValues designationValues,
+            @RequestParam(name = "Employee Band") Band band){
+        return employeeServices.saveEmployeeData(employeeList, band, designationValues);
     }
 
     @DeleteMapping("/designation/{designation}")
@@ -83,5 +88,9 @@ public class EmployeeController {
         Sales,
         Marketing,
         Finance
+    }
+
+    public enum Band{
+        L1,L2,L3, other
     }
 }

@@ -62,7 +62,7 @@ public class LeaveServices {
             LocalDate localFromDate = leave.getFrom_date();
             LocalDate localToDate = leave.getTo_date();
             Long holidayDays = ChronoUnit.DAYS.between(localFromDate, localToDate);
-            leave1.setHolidayDays(holidayDays);
+            leave1.setHolidayDays(holidayDays+1);
         }
         return leaveRepository.save(leave1);
     }
@@ -112,7 +112,7 @@ public class LeaveServices {
             LocalDate localFromDate = leaveData.getFrom_date();
             LocalDate localToDate = leaveData.getTo_date();
             Long holidayDays = ChronoUnit.DAYS.between(localFromDate, localToDate);
-            existingLeave.setHolidayDays(holidayDays);
+            existingLeave.setHolidayDays(holidayDays+1);
         }
         if(!currentUser.getDesignation().equalsIgnoreCase("HR"))
         {
