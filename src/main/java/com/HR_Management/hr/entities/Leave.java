@@ -39,19 +39,15 @@ public class Leave {
     private Employee employee;
 
     @Column(name = "fromDate")
-//    @Temporal(TemporalType.DATE)
-//    @JsonFormat(pattern = "yyyy-mm-dd")
     private LocalDate fromDate;
 
     @Column(name = "toDate")
     @Temporal(TemporalType.DATE)
-//    @JsonFormat(pattern = "yyyy-mm-dd")
     private LocalDate toDate;
 
     @Column(name = "holidayDays", columnDefinition =  "bigint GENERATED ALWAYS AS ((to_date - from_date)) STORED" ,insertable = false, updatable = false)
 //    @Column(name = "holidayDays")
     private Long holidayDays;
-
 
     public Employee getUpdatedBy() {
         return updatedBy;

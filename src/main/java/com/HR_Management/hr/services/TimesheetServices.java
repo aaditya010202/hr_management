@@ -5,15 +5,16 @@ import com.HR_Management.hr.DTO.Response.TimesheetCategorisedResponseDTO;
 import com.HR_Management.hr.common.CommonUtils;
 import com.HR_Management.hr.controller.EmployeeController;
 import com.HR_Management.hr.controller.LeaveController;
+import com.HR_Management.hr.entities.Leave;
 import com.HR_Management.hr.entities.Timesheet;
 import com.HR_Management.hr.respository.EmployeeRepository;
+import com.HR_Management.hr.respository.LeaveRepository;
 import com.HR_Management.hr.respository.ProjectRepository;
 import com.HR_Management.hr.respository.TimesheetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -26,6 +27,8 @@ public class TimesheetServices {
     ProjectRepository projectRepository;
     @Autowired
     EmployeeRepository employeeRepository;
+    @Autowired
+    LeaveRepository leaveRepository;
     public List<Timesheet> getData(String empId, String pId, LocalDate date) {
         return timesheetRepository.findAll()
                 .stream()
@@ -34,17 +37,28 @@ public class TimesheetServices {
                 .filter(timesheet -> date==null || Objects.equals(timesheet.getDate(),date))
                 .toList();
     }
-    public Timesheet saveNewTimesheetEntry(String empId, String pId, TimesheetRequestDTO data) {
-        if(projectRepository.findById(pId).get().getEmployees().contains(employeeRepository.findByEmpId(empId))) {
+    public Timesheet saveNewTimesheetEntry(String empId,TimesheetRequestDTO data) {
+        List<Leave> employeeLeaves=leaveRepository.findAll()
+                .stream()
+                .filter(leave -> Objects.equals(leave.getEmpId(), empId))
+                .filter(leave -> !leave.getFromDate().isAfter(LocalDate.now()) && !leave.getToDate().isBefore(LocalDate.now()))
+                .toList();
+
+        boolean hasAcceptedLeaves=employeeLeaves.stream().anyMatch(Leave::getAccepted);
+
+        if(projectRepository.findById(data.getProject_id()).isPresent()
+            && projectRepository.findById(data.getProject_id()).get().getEmployees().contains(employeeRepository.findByEmpId(empId))
+            && !hasAcceptedLeaves)
+        {
             Timesheet timesheet = new Timesheet();
             timesheet.setId(CommonUtils.getUUID());
             timesheet.setEmp_id(empId);
             timesheet.setHours(data.getDuration());
             timesheet.setDate(LocalDate.now());
-            timesheet.setP_id(pId);
+            timesheet.setP_id(data.getProject_id());
             return timesheetRepository.save(timesheet);
         }
-        return null;
+        else throw new RuntimeException("You already have an existing leave on this date.");
     }
 
     public Float getWorkingDaysOfEmployee(String empId, LocalDate fromDate, LocalDate toDate) {

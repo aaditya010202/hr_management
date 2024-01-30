@@ -21,7 +21,6 @@ public class EmployeeController {
 
     @GetMapping("")
     @Operation(summary = "Get all employees", description = "Get a list of all the employees")
-
     public List<EmployeeResponseDTO> getEmployees(){
         return employeeServices.getEmployees();
     }
