@@ -14,20 +14,13 @@ import java.util.List;
 public class Timesheet {
     @Id
     String id;
-
     @Column(name = "employee_id")
     String emp_id;
-
     @Column(name = "project_id")
     String p_id;
-
     @Column(name = "date")
     LocalDate date;
     Float hours;
-
-
-//    LocalTime entryTime;
-//    LocalTime exitTime;
 
     public Timesheet() {
     }
@@ -38,25 +31,7 @@ public class Timesheet {
         this.p_id = p_id;
         this.date = date;
         this.hours = hours;
-//        this.entryTime=entryTime;
-//        this.exitTime=exitTime;
     }
-
-//    public LocalTime getEntryTime() {
-//        return entryTime;
-//    }
-
-//    public void setEntryTime(LocalTime entryTime) {
-//        this.entryTime = entryTime;
-//    }
-//
-//    public LocalTime getExitTime() {
-//        return exitTime;
-//    }
-//
-//    public void setExitTime(LocalTime exitTime) {
-//        this.exitTime = exitTime;
-//    }
 
     public String getId() {
         return id;

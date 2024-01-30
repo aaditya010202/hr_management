@@ -12,7 +12,6 @@ public class Project {
 
     @Id
     @Column(name = "p_id")
-//    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(name = "name")

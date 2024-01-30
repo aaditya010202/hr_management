@@ -14,5 +14,4 @@ import java.util.List;
 @Repository
 public interface LeaveRepository extends JpaRepository<Leave, String> {
 
-    List<Leave> findAllByEmployee(Employee emp);
 }

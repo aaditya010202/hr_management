@@ -13,7 +13,6 @@ import java.util.List;
 public class Employee {
     @Id
     @Column(name = "emp_id")
-//    @GeneratedValue(strategy = GenerationType.UUID)
     private String empId;
 
     @Column(name = "name")

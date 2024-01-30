@@ -48,25 +48,27 @@ public class LeaveServices {
 
     @Transactional
     public Leave saveLeaveData(LeaveRequestDTO leave, LeaveController.LeaveType leaveType) {
-        Leave leave1=new Leave();
-        leave1.setId(CommonUtils.getUUID());
-        leave1.setEmpId(leave.getEmpId());
-        leave1.setDescription(leave.getDescription());
-        leave1.setFromDate(leave.getFrom_date());
-        leave1.setToDate(leave.getTo_date());
-        leave1.setType(leaveType.toString());
-        if (Objects.nonNull(leave.getFrom_date()) && Objects.nonNull(leave.getTo_date()))
-        {
-//            LocalDate localFromDate = leave.getFrom_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-//            LocalDate localToDate = leave.getTo_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate localFromDate = leave.getFrom_date();
-            LocalDate localToDate = leave.getTo_date();
-            Long holidayDays = ChronoUnit.DAYS.between(localFromDate, localToDate);
-            leave1.setHolidayDays(holidayDays+1);
-        }
-        return leaveRepository.save(leave1);
-    }
+        if (employeeRepository.findById(leave.getEmpId()).isPresent()) {
 
+            Leave leave1 = new Leave();
+            leave1.setId(CommonUtils.getUUID());
+            leave1.setEmpId(leave.getEmpId());
+            leave1.setDescription(leave.getDescription());
+            leave1.setFromDate(leave.getFrom_date());
+            leave1.setToDate(leave.getTo_date());
+            leave1.setType(leaveType.toString());
+            leave1.setEmployee(employeeRepository.findById(leave.getEmpId()).get());
+            if (Objects.nonNull(leave.getFrom_date()) && Objects.nonNull(leave.getTo_date())) {
+                LocalDate localFromDate = leave.getFrom_date();
+                LocalDate localToDate = leave.getTo_date();
+                Long holidayDays = ChronoUnit.DAYS.between(localFromDate, localToDate);
+                leave1.setHolidayDays(holidayDays + 1);
+            }
+
+            return leaveRepository.save(leave1);
+        }
+        else throw new RuntimeException("employee with id: " + leave.getEmpId()+" does not exist.");
+    }
     public void deleteLeavesById(String id) {
         leaveRepository.deleteById(id);
     }
@@ -74,31 +76,6 @@ public class LeaveServices {
     public LeaveResponseDTO updateLeaveById(String leaveId, LeaveRequestUpdateDTO leaveData, String currentUserId) {
         Employee currentUser = employeeRepository.findById((currentUserId))
                 .orElseThrow(() -> new RuntimeException("user with this id does not exist"));
-//        return leaveRepository.findById(leaveId)
-//                .map(existingLeave -> {
-//                    Assert.isTrue(Objects.equals(existingLeave.getEmpId(), currentUserId) || currentUser.getDesignation().equalsIgnoreCase("HR"), "current user is not authorized to update leave request");
-//                    existingLeave.setDescription(leaveData.getDescription());
-//                    existingLeave.setType(leaveData.getType());
-//                    existingLeave.setUpdatedBy(currentUser);
-//                    existingLeave.setFromDate(leaveData.getFrom_date());
-//                    existingLeave.setToDate(leaveData.getTo_date());
-//                    if (Objects.nonNull(leaveData.getFrom_date()) && Objects.nonNull(leaveData.getTo_date()))
-//                    {
-////                        LocalDate localFromDate = leaveData.getFrom_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-////                        LocalDate localToDate = leaveData.getTo_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-//                        LocalDate localFromDate = leaveData.getFrom_date();
-//                        LocalDate localToDate = leaveData.getTo_date();
-//                        Long holidayDays = ChronoUnit.DAYS.between(localFromDate, localToDate);
-//                        existingLeave.setHolidayDays(holidayDays);
-//                    }
-//                    if(!currentUser.getDesignation().equalsIgnoreCase("HR"))
-//                    {
-////                    Assert.isTrue(currentUser.getDesignation().equalsIgnoreCase("HR"),"current user is not allowed to update leave status");
-//                    existingLeave.setAccepted(leaveData.getAccepted());
-//                    }
-//                    return leaveRepository.save(existingLeave);
-//
-//                });
 
         Leave existingLeave=leaveRepository.findById(leaveId).get();
         Assert.isTrue(Objects.equals(existingLeave.getEmpId(), currentUserId) || currentUser.getDesignation().equalsIgnoreCase("HR"), "current user is not authorized to update leave request");

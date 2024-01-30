@@ -33,20 +33,20 @@ public class TimesheetController {
     private TimesheetRepository timesheetRepository;
 
     @GetMapping("")
-    @Operation(summary = "get all the timesheet data")
+    @Operation(summary = "get all the timesheet data", description = "Get the result filtered by the employee id, project id and date. Any of these values can be left blank.")
     public List<Timesheet> getAllTimesheetData(@RequestParam(name = "employee id", required = false) String empId, @RequestParam(name = "project id", required = false) String pId, @RequestParam(name = "date", required = false) LocalDate date)
     {
         return timesheetServices.getData(empId, pId, date);
     }
 
     @GetMapping("/{empId}")
-    @Operation(summary = "get the total working days of the employee")
+    @Operation(summary = "get the total working days of the employee", description = "Enter the employee id, from_date and to_date.")
     public Float getTotalWorkingDaysOfEmp(@PathVariable String empId, @RequestParam(name = "from date") LocalDate from_date, @RequestParam(name = "to date") LocalDate to_date)
     {
         return timesheetServices.getWorkingDaysOfEmployee(empId, from_date, to_date);
     }
 
-    @GetMapping("/projectCost")
+    @GetMapping("/cost")
     @Operation(summary = "get current total cost of project", description = "Enter the project id to get the total cost spent on the employees for the project till date.")
     public Float getTotalProjectCost(@RequestParam(name = "project id") String pId)
     {
@@ -60,7 +60,7 @@ public class TimesheetController {
         return timesheetServices.getHoursOfProject(pId, from_date, to_date);
     }
 
-    @GetMapping("/categorisedTimesheet/{pId}")
+    @GetMapping("/bandwise/{pId}")
     @Operation(summary = "Get count,cost and time of project based on employee band", description = "Enter the project id and select the employee band.")
     public TimesheetCategorisedResponseDTO getCategorisedResponse(@PathVariable String pId, @RequestParam(name = "employee band") EmployeeController.Band band)
     {

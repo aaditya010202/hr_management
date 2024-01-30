@@ -14,7 +14,6 @@ public class Leave {
 
     @Id
     @Column(name = "Id")
-//    @GeneratedValue(strategy = GenerationType.UUID)
     String Id;
 
     @Column(name = "employee_id")
@@ -28,16 +27,10 @@ public class Leave {
 
     @ManyToOne(targetEntity = Employee.class)
     private Employee updatedBy;
-
     @Column(name = "type")
     String type;
-
-//    @JsonBackReference
-//    @ManyToOne(fetch = FetchType.LAZY)
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL,CascadeType.REMOVE})
-//    @JoinColumn(name ="empId")
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL,CascadeType.REMOVE})
     private Employee employee;
-
     @Column(name = "fromDate")
     private LocalDate fromDate;
 
@@ -46,7 +39,6 @@ public class Leave {
     private LocalDate toDate;
 
     @Column(name = "holidayDays", columnDefinition =  "bigint GENERATED ALWAYS AS ((to_date - from_date)) STORED" ,insertable = false, updatable = false)
-//    @Column(name = "holidayDays")
     private Long holidayDays;
 
     public Employee getUpdatedBy() {
@@ -95,7 +87,6 @@ public class Leave {
     public void setToDate(LocalDate toDate) {
         this.toDate = toDate;
     }
-
 
     public Employee getEmployee() {
         return employee;

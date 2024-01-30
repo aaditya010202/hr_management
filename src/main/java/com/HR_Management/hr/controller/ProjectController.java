@@ -1,5 +1,4 @@
 package com.HR_Management.hr.controller;
-
 import com.HR_Management.hr.DTO.Request.ProjectRequestDTO;
 import com.HR_Management.hr.DTO.Request.ProjectRequestUpdateDTO;
 import com.HR_Management.hr.entities.Project;
@@ -7,9 +6,7 @@ import com.HR_Management.hr.services.ProjectServices;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Optional;
 
 @RequestMapping("/projects")
 @RestController

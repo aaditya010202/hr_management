@@ -13,7 +13,6 @@ import java.util.List;
 
 @RequestMapping("/employees")
 @RestController
-/*@RequestMapping("/employee")*/
 public class EmployeeController {
 
     @Autowired

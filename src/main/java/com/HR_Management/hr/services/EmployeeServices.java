@@ -11,6 +11,7 @@ import com.HR_Management.hr.respository.EmployeeRepository;
 import com.HR_Management.hr.respository.LeaveRepository;
 import com.HR_Management.hr.respository.ProjectRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -68,22 +69,22 @@ public class EmployeeServices {
     }
 
     public List<EmployeeResponseDTO> getEmployees() {
-        return employeeRepository.findAll().stream().map(this::convertEntityToDtoRequest).collect(Collectors.toList());
+        return employeeRepository.findAll().stream().map(this::convertEntityToDtoResponse).collect(Collectors.toList());
     }
 
-private EmployeeResponseDTO convertEntityToDtoRequest(Employee employee)
-{
-    EmployeeResponseDTO employeeResponseDTO =new EmployeeResponseDTO();
-    employeeResponseDTO.setEmpId(employee.getEmpId());
-    employeeResponseDTO.setName(employee.getName());
-    employeeResponseDTO.setEmail(employee.getEmail());
-    employeeResponseDTO.setSalary(employee.getSalary());
-    employeeResponseDTO.setLeaves(employee.getLeaves());
-    employeeResponseDTO.setDepartment(employee.getDepartment());
-    employeeResponseDTO.setDesignation(employee.getDesignation());
-    employeeResponseDTO.setProjectList(employee.getProjects());
-    return employeeResponseDTO;
-}
+    private EmployeeResponseDTO convertEntityToDtoResponse(Employee employee)
+    {
+        EmployeeResponseDTO employeeResponseDTO =new EmployeeResponseDTO();
+        employeeResponseDTO.setEmpId(employee.getEmpId());
+        employeeResponseDTO.setName(employee.getName());
+        employeeResponseDTO.setEmail(employee.getEmail());
+        employeeResponseDTO.setSalary(employee.getSalary());
+        employeeResponseDTO.setLeaves(employee.getLeaves());
+        employeeResponseDTO.setDepartment(employee.getDepartment());
+        employeeResponseDTO.setDesignation(employee.getDesignation());
+        employeeResponseDTO.setProjectList(employee.getProjects());
+        return employeeResponseDTO;
+    }
 
     public Employee getEmployeeById(String empId) {
         return employeeRepository.findByEmpId(empId);

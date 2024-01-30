@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<Employee,String> {
     List<Employee> deleteByDesignation(String designation);
     Employee findTopByDesignationOrderBySalaryDesc(String designation);
+    @Query(value = "SELECT * from employee WHERE designation=:designation ORDER BY salary DESC",nativeQuery = true)
     List<Employee> findAllByDesignationOrderBySalaryDesc(String designation);
     Employee findByEmpId(String empId);
 

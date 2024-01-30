@@ -12,9 +12,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Optional;
 
 @RequestMapping("/leaves")
 @RestController
@@ -32,7 +30,6 @@ public class LeaveController {
 
     @GetMapping("/{empId}")
     @Operation(summary = "Get leave by id", description = "Enter the leave id to get the leave")
-
     public List<Leave> getLeavesByEmployee(@PathVariable String empId)
     {
         return leaveServices.getLeavesByEmployee(empId);
@@ -47,7 +44,7 @@ public class LeaveController {
     }
     @PutMapping("")
     @Operation(summary = "Create new leave", description = "Enter employee id, description of leave, type of leave(medical, casual etc.), from date and to date of leave.")
-    public Leave saveLeaves(@RequestBody LeaveRequestDTO leave, @RequestParam(value = "leave type") LeaveType leaveType, HttpServletRequest httpServletRequest)
+    public Leave saveLeaves(@RequestBody LeaveRequestDTO leave, @RequestParam(value = "leave type") LeaveType leaveType)
     {
         return leaveServices.saveLeaveData(leave, leaveType);
     }
@@ -65,8 +62,8 @@ public class LeaveController {
     })
     public List<Leave> doActionAtLeaveRequests(
             @RequestBody List<String> ids,
-            @RequestParam(value = "action") Action action, HttpServletRequest httpServletRequest){
-//        return leaveServices.doActionAtLeaveRequests(ids, action, String.fromString(httpServletRequest.getHeader("employeeId")));
+            @RequestParam(value = "action") Action action, HttpServletRequest httpServletRequest)
+    {
         return leaveServices.doActionAtLeaveRequests(ids, action, (httpServletRequest.getHeader("employeeId")));
     }
 
@@ -95,6 +92,4 @@ public class LeaveController {
         Sick,
         Casual
     }
-
-
 }
